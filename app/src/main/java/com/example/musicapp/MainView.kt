@@ -59,7 +59,7 @@ fun MainView(controller: NavController) {
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet(modifier = Modifier.padding(16.dp)){
+            ModalDrawerSheet{
                 screensInDrawwer.forEach {item->
                     NavigationDrawerItem(
                         label = {
@@ -85,7 +85,8 @@ fun MainView(controller: NavController) {
                                 contentDescription = item.dTitle,
                                 modifier = Modifier.padding(end = 8.dp, top = 4.dp)
                             )
-                        }
+                        },
+                        modifier = Modifier.padding(end = 16.dp)
                     )
                 }
 
@@ -128,35 +129,3 @@ fun MainView(controller: NavController) {
 }
 
 
-
-@Composable
-fun DrawerItem(
-    isSelected : Boolean,
-    item: Screen.DrawerScreen,
-    onDrawerItemClicked :() -> Unit
-){
-
-    val background = if (isSelected) Color.DarkGray else Color.White
-
-    Row (
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 16.dp)
-            .background(color = background)
-            .clickable {
-                onDrawerItemClicked()
-            }
-    ){
-
-        Icon(painter = painterResource(id = item.icon),
-            contentDescription = item.dTitle,
-            modifier = Modifier.padding(end = 8.dp, top = 4.dp)
-        )
-
-        Text(
-            text = item.dTitle,
-            style = MaterialTheme.typography.headlineSmall
-        )
-
-    }
-}
