@@ -5,11 +5,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,6 +22,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -55,6 +60,54 @@ fun MainView(controller: NavController) {
     val currentScreen by remember { viewModel.currentScreen }
     var title by remember { mutableStateOf(currentScreen.title) }
     var dialogOpen = remember { mutableStateOf(false) }
+
+    val navigationIcon : @Composable () -> Unit ={
+        if(currentRoute != Screen.DrawerScreen.Account.dRoute
+            && currentRoute != Screen.DrawerScreen.Subcription.dRoute){
+            IconButton(onClick = {
+                scope.launch {
+                    drawerState.open()
+                }
+            }) {
+                Icon(
+                    imageVector = Icons.Default.Home,
+                    contentDescription = "Open Drawer"
+                )
+            }
+        }else{
+            IconButton(onClick = {
+              controller.navigateUp()
+            }) {
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowLeft,
+                    contentDescription = null
+                )
+            }
+        }
+    }
+
+    val bottomBar : @Composable () -> Unit = {//TODO UNDERSTAND THIS
+        if( currentRoute != Screen.DrawerScreen.Account.dRoute
+            && currentRoute != Screen.DrawerScreen.Subcription.dRoute){
+           NavigationBar {
+               screensInBottom.forEach {
+                   item->
+                   NavigationBarItem(
+                       selected = currentRoute == item.route ,
+                       onClick = {
+                                 controller.navigate(item.bRoute)
+                       },
+                       icon = {
+                           Icon(
+                               imageVector = if(currentRoute == item.bRoute)
+                                   item.selectedIcon else item.disSelectedIcon,
+                               contentDescription = null
+                           )
+                       })
+               }
+           }
+        }
+    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -95,20 +148,14 @@ fun MainView(controller: NavController) {
         }
     ) {
         Scaffold(
+            bottomBar = {
+                        bottomBar()
+            },
             topBar = {
                 TopAppBar(
                     title = { Text(text = title) },
                     navigationIcon = {
-                        IconButton(onClick = {
-                            scope.launch {
-                                drawerState.open()
-                            }
-                        }) {
-                            Icon(
-                                imageVector = Icons.Default.Home,
-                                contentDescription = "Open Drawer"
-                            )
-                        }
+                        navigationIcon()
                     }
                 )
             }

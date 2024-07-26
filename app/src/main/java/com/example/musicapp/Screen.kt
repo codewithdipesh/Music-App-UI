@@ -1,8 +1,21 @@
 package com.example.musicapp
 
+import android.graphics.drawable.Icon
 import androidx.annotation.DrawableRes
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Screen(val title: String , val route:String) {
+
+    sealed class BottomScreen(val bTitle : String , val bRoute:String ,  val selectedIcon : ImageVector ,val disSelectedIcon : ImageVector)
+        :Screen(bTitle,bRoute){
+            object Home : BottomScreen("Home","home", Icons.Filled.Home,Icons.Default.Home)
+            object Library : BottomScreen("Library","library",Icons.Filled.List,Icons.Default.List)
+            object Browse : BottomScreen("Browse","browse",Icons.Filled.Search,Icons.Default.Search)
+        }
 
     sealed class DrawerScreen(val dTitle : String , val dRoute:String , @DrawableRes val icon : Int )
         :Screen(dTitle,dRoute){
@@ -30,3 +43,10 @@ val screensInDrawwer = listOf(
     Screen.DrawerScreen.AddAccount,
     Screen.DrawerScreen.Subcription,
 )
+
+val screensInBottom = listOf(
+    Screen.BottomScreen.Home,
+    Screen.BottomScreen.Library,
+    Screen.BottomScreen.Browse,
+)
+
