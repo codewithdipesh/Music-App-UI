@@ -19,13 +19,13 @@ fun Navigation(navController: NavController, viewModel: MainViewModel , pd: Padd
         modifier = Modifier.padding(pd) )
     {
         composable(Screen.BottomScreen.Home.route){
-
+                 Home()
         }
         composable(Screen.BottomScreen.Library.route){
 
         }
         composable(Screen.BottomScreen.Browse.route){
-
+            BrowseView()
         }
 
 

@@ -61,9 +61,11 @@ fun MainView(controller: NavController) {
     var title by remember { mutableStateOf(currentScreen.title) }
     var dialogOpen = remember { mutableStateOf(false) }
 
-    val navigationIcon : @Composable () -> Unit ={
-        if(currentRoute != Screen.DrawerScreen.Account.dRoute
-            && currentRoute != Screen.DrawerScreen.Subcription.dRoute){
+    val navigationIcon: @Composable () -> Unit = {
+        if (currentRoute != Screen.DrawerScreen.Account.dRoute
+            && currentRoute != Screen.DrawerScreen.Subcription.dRoute
+            && currentRoute != Screen.DrawerScreen.AddAccount.dRoute
+        ) {
             IconButton(onClick = {
                 scope.launch {
                     drawerState.open()
@@ -74,9 +76,9 @@ fun MainView(controller: NavController) {
                     contentDescription = "Open Drawer"
                 )
             }
-        }else{
+        } else {
             IconButton(onClick = {
-              controller.navigateUp()
+                controller.navigateUp()
             }) {
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowLeft,
@@ -86,34 +88,39 @@ fun MainView(controller: NavController) {
         }
     }
 
-    val bottomBar : @Composable () -> Unit = {//TODO UNDERSTAND THIS
-        if( currentRoute != Screen.DrawerScreen.Account.dRoute
-            && currentRoute != Screen.DrawerScreen.Subcription.dRoute){
-           NavigationBar {
-               screensInBottom.forEach {
-                   item->
-                   NavigationBarItem(
-                       selected = currentRoute == item.route ,
-                       onClick = {
-                                 controller.navigate(item.bRoute)
-                       },
-                       icon = {
-                           Icon(
-                               imageVector = if(currentRoute == item.bRoute)
-                                   item.selectedIcon else item.disSelectedIcon,
-                               contentDescription = null
-                           )
-                       })
-               }
-           }
+    val bottomBar: @Composable () -> Unit = {
+        if (currentRoute != Screen.DrawerScreen.Account.dRoute
+            && currentRoute != Screen.DrawerScreen.Subcription.dRoute
+            && currentRoute != Screen.DrawerScreen.AddAccount.dRoute
+        ) {
+            NavigationBar {
+                screensInBottom.forEach { item ->
+                    NavigationBarItem(
+                        selected = currentRoute == item.route,
+                        onClick = {
+                            controller.navigate(item.bRoute)
+                            viewModel.setCurrentScreen(item)
+                        },
+                        label = {
+                            Text(text = item.bTitle)
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = if (currentRoute == item.bRoute)
+                                    item.selectedIcon else item.disSelectedIcon,
+                                contentDescription = null
+                            )
+                        })
+                }
+            }
         }
     }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet{
-                screensInDrawwer.forEach {item->
+            ModalDrawerSheet {
+                screensInDrawwer.forEach { item ->
                     NavigationDrawerItem(
                         label = {
                             Text(
@@ -121,20 +128,21 @@ fun MainView(controller: NavController) {
                                 style = MaterialTheme.typography.headlineSmall
                             )
                         },
-                        selected = currentRoute == item.route ,
+                        selected = currentRoute == item.route,
                         onClick = {
                             scope.launch {
-                                                            drawerState.close()
-                                                        }
-                                                        if (item.route == Screen.DrawerScreen.AddAccount.route) {
-                                                            dialogOpen.value = true
-                                                        } else {
-                                                            controller.navigate(item.route)
-                                                            title = item.title
-                                                        }
+                                drawerState.close()
+                            }
+                            if (item.route == Screen.DrawerScreen.AddAccount.route) {
+                                dialogOpen.value = true
+                            } else {
+                                controller.navigate(item.route)
+                                viewModel.setCurrentScreen(item)
+                            }
                         },
                         icon = {
-                            Icon(painter = painterResource(id = item.icon),
+                            Icon(
+                                painter = painterResource(id = item.icon),
                                 contentDescription = item.dTitle,
                                 modifier = Modifier.padding(end = 8.dp, top = 4.dp)
                             )
@@ -144,12 +152,12 @@ fun MainView(controller: NavController) {
                 }
 
 
-                }
+            }
         }
     ) {
         Scaffold(
             bottomBar = {
-                        bottomBar()
+                bottomBar()
             },
             topBar = {
                 TopAppBar(
@@ -174,5 +182,6 @@ fun MainView(controller: NavController) {
         }
     }
 }
+
 
 
