@@ -79,6 +79,7 @@ fun MainView(controller: NavController) {
         } else {
             IconButton(onClick = {
                 controller.navigateUp()
+
             }) {
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowLeft,
@@ -99,7 +100,7 @@ fun MainView(controller: NavController) {
                         selected = currentRoute == item.route,
                         onClick = {
                             controller.navigate(item.bRoute)
-                            viewModel.setCurrentScreen(item)
+                            title = item.bTitle
                         },
                         label = {
                             Text(text = item.bTitle)
@@ -137,7 +138,7 @@ fun MainView(controller: NavController) {
                                 dialogOpen.value = true
                             } else {
                                 controller.navigate(item.route)
-                                viewModel.setCurrentScreen(item)
+                                title=item.dTitle
                             }
                         },
                         icon = {

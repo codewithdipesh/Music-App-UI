@@ -22,7 +22,7 @@ fun Navigation(navController: NavController, viewModel: MainViewModel , pd: Padd
                  Home()
         }
         composable(Screen.BottomScreen.Library.route){
-
+            LibraryScreen()
         }
         composable(Screen.BottomScreen.Browse.route){
             BrowseView()
